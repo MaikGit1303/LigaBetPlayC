@@ -9,6 +9,7 @@ namespace ConsoleApp1
         // Instancias de los gestores para manejar la lógica de las entidades
         static GestionTorneos gestorTorneos = new GestionTorneos();
         static GestionEquipos gestorEquipos = new GestionEquipos();
+        static GestionJugadores gestorJugadores = new GestionJugadores(gestorEquipos);
 
         static void Main(string[] args)
         {
@@ -28,6 +29,7 @@ namespace ConsoleApp1
 
                 if (int.TryParse(opcionTexto, out int opcionSeleccionada))
                 {
+                    // Llama al método que maneja la opción seleccionada del menú principal
                     bool salir = EjecutarOpcionMenuPrincipal(opcionSeleccionada);
                     if (salir)
                     {
@@ -42,7 +44,7 @@ namespace ConsoleApp1
 
                 Console.WriteLine("\nPresiona cualquier tecla para continuar...");
                 Console.ReadKey(); // Espera una tecla antes de mostrar el menú de nuevo
-                Console.Clear();
+                Console.Clear(); // Limpia la consola para el siguiente menú
             }
         }
 
@@ -74,7 +76,7 @@ namespace ConsoleApp1
                     MostrarSubmenuEquipos();
                     break;
                 case 2:
-                    Console.WriteLine("Has seleccionado: Registro Jugadores. (Funcionalidad pendiente)");
+                    MostrarSubmenuJugadores();
                     break;
                 case 3:
                     Console.WriteLine("Has seleccionado: Transferencias (Compra, Préstamo). (Funcionalidad pendiente)");
@@ -83,7 +85,7 @@ namespace ConsoleApp1
                     Console.WriteLine("Has seleccionado: Estadísticas. (Funcionalidad pendiente)");
                     break;
                 case 5:
-                    return true; 
+                    return true;
                 default:
                     Console.WriteLine("Opción no reconocida. Por favor, intenta de nuevo.");
                     break;
@@ -96,7 +98,7 @@ namespace ConsoleApp1
         {
             while (true)
             {
-                Console.Clear(); 
+                Console.Clear();
                 Console.WriteLine("══════════════════════════════════");
                 Console.WriteLine("          MENÚ TORNEOS            ");
                 Console.WriteLine("══════════════════════════════════");
@@ -109,22 +111,22 @@ namespace ConsoleApp1
                 Console.Write("Selecciona una opción: ");
 
                 string? opcionTexto = Console.ReadLine();
-                Console.WriteLine(); 
+                Console.WriteLine();
 
                 if (opcionTexto == null)
                 {
                     Console.WriteLine("Error de entrada. Regresando al menú principal.");
-                    break; 
+                    break;
                 }
 
                 if (int.TryParse(opcionTexto, out int opcionSubmenu))
                 {
                     switch (opcionSubmenu)
                     {
-                        case 1: 
+                        case 1:
                             gestorTorneos.AgregarTorneo();
                             break;
-                        case 2: 
+                        case 2:
                             Console.Write("¿Quieres buscar un torneo específico por ID (S/N)? ");
                             string? respuesta = Console.ReadLine();
 
@@ -163,10 +165,10 @@ namespace ConsoleApp1
                         case 3:
                             gestorTorneos.EliminarTorneo();
                             break;
-                        case 4: 
+                        case 4:
                             gestorTorneos.ActualizarTorneo();
                             break;
-                        case 5: 
+                        case 5:
                             Console.WriteLine("Regresando al Menú Principal...");
                             return;
                         default:
@@ -176,11 +178,11 @@ namespace ConsoleApp1
                 }
                 else
                 {
-                    Console.WriteLine("Opción inválida. Por favor, introduce un número válido (ej. 1, 5)."); // <-- Mensaje actualizado
+                    Console.WriteLine("Opción inválida. Por favor, introduce un número válido (ej. 1, 5).");
                 }
 
                 Console.WriteLine("\nPresiona cualquier tecla para continuar en el Menú Torneos...");
-                Console.ReadKey(); // Espera la entrada del usuario antes de volver a mostrar el submenú
+                Console.ReadKey();
             }
         }
 
@@ -207,17 +209,17 @@ namespace ConsoleApp1
                 if (opcionTexto == null)
                 {
                     Console.WriteLine("Error de entrada. Regresando al menú principal.");
-                    break; 
+                    break;
                 }
 
-                if (int.TryParse(opcionTexto, out int opcionSubmenu)) 
+                if (int.TryParse(opcionTexto, out int opcionSubmenu))
                 {
                     switch (opcionSubmenu)
                     {
-                        case 1: 
+                        case 1:
                             gestorEquipos.RegistrarEquipo();
                             break;
-                        case 2: 
+                        case 2:
                             Console.Write("¿Quieres buscar un equipo específico por ID (S/N)? ");
                             string? respuesta = Console.ReadLine();
 
@@ -253,15 +255,15 @@ namespace ConsoleApp1
                                 gestorEquipos.MostrarEquipos();
                             }
                             break;
-                        case 3: 
+                        case 3:
                             gestorEquipos.EliminarEquipo();
                             break;
-                        case 4: 
+                        case 4:
                             gestorEquipos.ActualizarEquipo();
                             break;
                         case 5:
                             Console.WriteLine("Regresando al Menú Principal...");
-                            return; 
+                            return;
                         default:
                             Console.WriteLine("Opción de submenú no reconocida. Por favor, intenta de nuevo.");
                             break;
@@ -269,10 +271,102 @@ namespace ConsoleApp1
                 }
                 else
                 {
-                    Console.WriteLine("Opción inválida. Por favor, introduce un número válido (ej. 1, 5)."); // <-- Mensaje actualizado
+                    Console.WriteLine("Opción inválida. Por favor, introduce un número válido (ej. 1, 5).");
                 }
 
                 Console.WriteLine("\nPresiona cualquier tecla para continuar en el Menú Equipos...");
+                Console.ReadKey();
+            }
+        }
+
+        // Método para mostrar y manejar el submenú de Jugadores
+        static void MostrarSubmenuJugadores()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("══════════════════════════════════");
+                Console.WriteLine("          MENÚ JUGADORES          ");
+                Console.WriteLine("══════════════════════════════════");
+                Console.WriteLine("1. Registrar Jugador");
+                Console.WriteLine("2. Buscar/Mostrar Jugadores");
+                Console.WriteLine("3. Editar Jugador");
+                Console.WriteLine("4. Eliminar Jugador");
+                Console.WriteLine("5. Regresar al Menú Principal");
+                Console.WriteLine("══════════════════════════════════");
+                Console.Write("Selecciona una opción: ");
+
+                string? opcionTexto = Console.ReadLine();
+                Console.WriteLine();
+
+                if (opcionTexto == null)
+                {
+                    Console.WriteLine("Error de entrada. Regresando al menú principal.");
+                    break;
+                }
+
+                if (int.TryParse(opcionTexto, out int opcionSubmenu))
+                {
+                    switch (opcionSubmenu)
+                    {
+                        case 1:
+                            gestorJugadores.RegistrarJugador();
+                            break;
+                        case 2:
+                            Console.Write("¿Quieres buscar un jugador específico por ID (S/N)? ");
+                            string? respuesta = Console.ReadLine();
+                            if (respuesta == null)
+                            {
+                                Console.WriteLine("Error de entrada.");
+                                continue;
+                            }
+
+                            if (respuesta.ToUpper() == "S")
+                            {
+                                Console.Write("Introduce el ID del jugador a buscar: ");
+                                if (int.TryParse(Console.ReadLine(), out int idBuscar))
+                                {
+                                    Jugador? encontrado = gestorJugadores.BuscarJugadorPorId(idBuscar);
+                                    if (encontrado != null)
+                                    {
+                                        Console.WriteLine("\nJugador Encontrado:");
+                                        encontrado.MostrarInfo();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"No se encontró ningún jugador con el ID: {idBuscar}");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("ID inválido.");
+                                }
+                            }
+                            else
+                            {
+                                gestorJugadores.MostrarJugadores();
+                            }
+                            break;
+                        case 3:
+                            gestorJugadores.EditarJugador();
+                            break;
+                        case 4:
+                            gestorJugadores.EliminarJugador();
+                            break;
+                        case 5:
+                            Console.WriteLine("Regresando al Menú Principal...");
+                            return;
+                        default:
+                            Console.WriteLine("Opción de submenú no reconocida. Por favor, intenta de nuevo.");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Opción inválida. Por favor, introduce un número válido (ej. 1, 5).");
+                }
+
+                Console.WriteLine("\nPresiona cualquier tecla para continuar en el Menú Jugadores...");
                 Console.ReadKey();
             }
         }
